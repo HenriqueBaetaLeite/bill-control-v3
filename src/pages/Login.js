@@ -1,10 +1,12 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Button, CssBaseline, TextField, Box, Typography, Container } from '@material-ui/core';
-import { Alert, AlertTitle } from '@material-ui/lab';
+
 import LocalAtmTwoToneIcon from '@material-ui/icons/LocalAtmTwoTone';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Copyright from '../components/Copyright';
+import myWarningAlert from '../components/WarningAlert';
 
 import { TweenMax, Power3 } from 'gsap';
 
@@ -29,25 +31,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const myAlert = (props) =>
-  props === 'email' ? (
-    <Alert severity="warning">
-      <AlertTitle>Aviso</AlertTitle>
-      Email faltando ou no formato incorreto
-    </Alert>
-  ) : (
-    <Alert severity="warning" className="m2">
-      <AlertTitle>Aviso</AlertTitle>
-      Senha faltando ou menor do que 8 caracteres
-    </Alert>
-  );
-
 export default function Login() {
+  const history = useHistory();
   const classes = useStyles();
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const [wrongEmailInput, setWrongEmailInput] = useState(false);
   const [wrongPasswordInput, setWrongPasswordInput] = useState(false);
+  const [loginSuccess, setLoginSuccess] = useState(false);
 
   let LogoIcon = useRef(null);
   let buttonAnime = useRef(null);
@@ -55,10 +46,6 @@ export default function Login() {
   let emailAnime = useRef(null);
 
   useEffect(() => {
-    // TweenMax.from(buttonAnime, 3, { opacity: 0, y: -50, ease: Power3.easeOut });
-
-    // TweenMax.from(LogoIcon, 6, { opacity: 0, ease: Power3.easeInOut, delay: 0.3 });
-
     TweenMax.staggerFrom([emailAnime, passwordAnime], 0.6, { y: -60, ease: 'ease-in' }, 0.1);
 
     TweenMax.staggerFrom(
@@ -78,16 +65,19 @@ export default function Login() {
 
     if (!password || password.length < 8) return setWrongPasswordInput(true);
 
+    setLoginSuccess(true);
+    console.log('false ou true?', loginSuccess);
+
+    setTimeout(() => history.push('./home'), 2000);
+
     console.log('clicked');
     console.log(email, password);
   };
 
   const handleChange = (event) => {
     const { id, value } = event.target;
-
     setWrongEmailInput(false);
     setWrongPasswordInput(false);
-
     switch (id) {
       case 'email':
         setEmail(value);
@@ -112,8 +102,9 @@ export default function Login() {
           Faça Login
         </Typography>
 
-        {wrongEmailInput ? myAlert('email') : null}
-        {wrongPasswordInput ? myAlert('password') : null}
+        {wrongEmailInput && myWarningAlert('email')}
+        {wrongPasswordInput && myWarningAlert('password')}
+        {loginSuccess && myWarningAlert('login')}
 
         <form autoComplete="off" onSubmit={handleSubmit} className={classes.form} noValidate>
           <TextField
