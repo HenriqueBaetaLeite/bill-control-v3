@@ -1,9 +1,10 @@
 import React, { useState, useRef } from 'react';
+import { useHistory } from 'react-router-dom';
 import { AppBar, Toolbar, IconButton, Typography, Menu, MenuItem } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 // import CloseIcon from '@material-ui/icons/Close';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import MyMenu from './MyMenu';
+import MyMenu from '../components/MyMenu';
 
 import { TweenMax } from 'gsap';
 import { makeStyles } from '@material-ui/styles';
@@ -16,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const TheHeader = () => {
+  const history = useHistory();
   const classes = useStyles();
   const [openMenu, setOpenMenu] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -25,9 +27,9 @@ const TheHeader = () => {
   const handleMenu = () => {
     setOpenMenu(!openMenu);
     if (openMenu) {
-      return TweenMax.to(iconMenuAnime, 0.4, { rotate: 180, ease: 'ease-out' });
+      return TweenMax.to(iconMenuAnime, 0.4, { x: 0, rotate: 180, ease: 'ease-out' });
     } else {
-      return TweenMax.to(iconMenuAnime, 0.4, { rotate: 90, ease: 'ease-out' });
+      return TweenMax.to(iconMenuAnime, 0.4, { x: 180, rotate: 90, ease: 'ease-out' });
     }
   };
 
@@ -40,9 +42,10 @@ const TheHeader = () => {
   };
 
   const logout = () => {
-    localStorage.removeItem('userData');
+    localStorage.removeItem('userLogin');
     setAnchorEl(null);
     console.log('fui...');
+    history.push('/');
   };
 
   return (

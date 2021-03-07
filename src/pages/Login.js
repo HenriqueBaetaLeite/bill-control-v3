@@ -8,7 +8,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Copyright from '../components/Copyright';
 import myWarningAlert from '../components/WarningAlert';
 
-import { TweenMax, Power3 } from 'gsap';
+import { TweenMax, TweenLite, Power3 } from 'gsap';
 
 import { validateEmail } from '../utils/validateEmail';
 
@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  div: {
+    marginTop: theme.spacing(4),
+  },
 }));
 
 export default function Login() {
@@ -46,7 +49,7 @@ export default function Login() {
   let emailAnime = useRef(null);
 
   useEffect(() => {
-    TweenMax.staggerFrom([emailAnime, passwordAnime], 0.6, { y: -60, ease: 'ease-in' }, 0.1);
+    TweenMax.staggerFrom([emailAnime, passwordAnime], 1.2, { y: -80, ease: 'ease-in' }, 0.1);
 
     TweenMax.staggerFrom(
       [buttonAnime, LogoIcon],
@@ -55,23 +58,29 @@ export default function Login() {
       0.4,
     );
 
-    TweenMax.to(LogoIcon, 2, { scale: 2, ease: 'bounce', delay: 2 });
+    TweenMax.to(LogoIcon, 2, { scale: 1.7, ease: 'elastic', delay: 2 });
   }, []);
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (!email || !validateEmail(email)) return setWrongEmailInput(true);
+    if (!email || !validateEmail(email)) {
+      TweenLite.to(emailAnime, 0.5, { scale: 1.05 });
+      TweenLite.to(emailAnime, 0.5, { scale: 1, delay: 0.6 });
+      return setWrongEmailInput(true);
+    }
 
-    if (!password || password.length < 8) return setWrongPasswordInput(true);
+    if (!password || password.length < 8) {
+      TweenLite.to(passwordAnime, 0.5, { scale: 1.05 });
+      TweenLite.to(passwordAnime, 0.5, { scale: 1, delay: 0.6 });
+      return setWrongPasswordInput(true);
+    }
 
     setLoginSuccess(true);
-    console.log('false ou true?', loginSuccess);
+
+    localStorage.setItem('userLogin', 'true');
 
     setTimeout(() => history.push('./home'), 2000);
-
-    console.log('clicked');
-    console.log(email, password);
   };
 
   const handleChange = (event) => {
@@ -94,17 +103,16 @@ export default function Login() {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <Typography variant="h5">RACLeite Controle Financeiro v-3.0</Typography>
+        <Typography variant="h6">RACLeite Controle Financeiro v-3.0</Typography>
 
         <LocalAtmTwoToneIcon ref={(el) => (LogoIcon = el)} className={classes.icon} />
 
-        <Typography component="h1" variant="h5">
-          Faça Login
-        </Typography>
-
-        {wrongEmailInput && myWarningAlert('email')}
-        {wrongPasswordInput && myWarningAlert('password')}
-        {loginSuccess && myWarningAlert('login')}
+        <Typography variant="h6">Faça Login</Typography>
+        <div className={classes.div}>
+          {wrongEmailInput && myWarningAlert('email')}
+          {wrongPasswordInput && myWarningAlert('password')}
+          {loginSuccess && myWarningAlert('login')}
+        </div>
 
         <form autoComplete="off" onSubmit={handleSubmit} className={classes.form} noValidate>
           <TextField

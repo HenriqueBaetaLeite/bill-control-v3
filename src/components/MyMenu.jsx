@@ -31,9 +31,10 @@ const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'space-around',
   },
-  drawer: {
-    background: 'red',
+  test: {
+    background: '#',
   },
 }));
 
@@ -48,15 +49,15 @@ const MyMenu = (props) => {
     { text: 'Sobre', icon: <MailIcon />, onClick: () => history.push('/sobre') },
   ];
   return (
-    <Drawer anchor="left" variant="persistent" open={open}>
+    <Drawer anchor="left" variant="persistent" open={open} onClick={() => handleMenu()}>
       <Container className={classes.container}>
-        <LocalAtmIcon />
+        <LocalAtmIcon style={{ cursor: 'pointer' }} onClick={() => history.push('/home')} />
         <Typography className={classes.typography} variant="subtitle1">
           RACLeite
         </Typography>
       </Container>
       <Divider />
-      <List>
+      <List className={classes.test}>
         {listItems.map((item) => {
           const { text, icon, onClick } = item;
           return (
@@ -67,10 +68,10 @@ const MyMenu = (props) => {
           );
         })}
       </List>
-      <MenuItem className={classes.menu} onClick={() => handleMenu()}>
+      {/* <MenuItem className={classes.menu} onClick={() => handleMenu()}>
         Minhas receitas
       </MenuItem>
-      <MenuItem onClick={() => handleMenu()}>Minhas despesas</MenuItem>
+      <MenuItem onClick={() => handleMenu()}>Minhas despesas</MenuItem> */}
     </Drawer>
   );
 };
