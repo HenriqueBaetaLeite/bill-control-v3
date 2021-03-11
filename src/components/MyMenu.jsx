@@ -3,7 +3,6 @@ import { withRouter } from 'react-router-dom';
 
 import {
   Drawer,
-  MenuItem,
   ListItem,
   ListItemIcon,
   ListItemText,
